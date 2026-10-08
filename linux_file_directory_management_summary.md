@@ -2,82 +2,160 @@
 
 ## Objective
 
-Learn to manage Linux files and directories using:
+Learn how to create, remove, move, copy, and edit files and directories in Linux using Bash.
 
-- `mkdir`
-- `rmdir`
-- `touch`
-- `rm`
-- `mv`
-- `cp`
-- `nano`
-- `>`
-- `>>`
+Main commands:
+
+- `mkdir` — create a directory
+- `rmdir` — remove an empty directory
+- `touch` — create an empty file
+- `rm` — remove a file
+- `mv` — move or rename a file/directory
+- `cp` — copy a file/directory
+- `nano` — edit text files
+- `>` — overwrite a file
+- `>>` — append to a file
 
 ---
 
 ## Core Commands
 
-| Command | Purpose | Example |
-|---|---|---|
-| `mkdir` | Create a directory | `mkdir logs` |
-| `rmdir` | Remove an empty directory | `rmdir temp` |
-| `touch` | Create an empty file | `touch tasks.txt` |
-| `rm` | Delete a file | `rm tempnotes.txt` |
-| `mv` | Move or rename a file | `mv Q3patches.txt /home/analyst/reports` |
-| `cp` | Copy a file | `cp file.txt /home/analyst/logs` |
-| `nano` | Edit a text file | `nano tasks.txt` |
-| `>` | Overwrite file contents | `echo "time" > file.txt` |
-| `>>` | Append to file contents | `echo "update" >> file.txt` |
+### Create a directory
 
----
-
-## Important Notes
-
-- `rmdir` removes **empty directories only**.
-- `rm` deletes files and should be used carefully.
-- `mv` can both move and rename files.
-- `cp` creates a copy while keeping the original.
-- `>` overwrites existing contents.
-- `>>` appends new contents.
-- In `nano`, `Ctrl + O` saves and `Ctrl + X` exits.
-
----
-
-## Lab Goal
-
-Change this structure:
-
-```text
-/home/analyst
-├── notes
-│   ├── Q3patches.txt
-│   └── tempnotes.txt
-├── reports
-│   ├── Q1patches.txt
-│   └── Q2patches.txt
-└── temp
+```bash
+mkdir network
 ```
 
-into:
+Verify:
+
+```bash
+ls
+```
+
+### Remove an empty directory
+
+```bash
+rmdir network
+```
+
+### Create an empty file
+
+```bash
+touch permissions.txt
+```
+
+### Remove a file
+
+```bash
+rm permissions.txt
+```
+
+Use `rm` carefully because deleted files may be difficult to recover.
+
+### Move a file
+
+```bash
+mv permissions.txt /home/analyst/logs
+```
+
+### Rename a file
+
+```bash
+mv permissions.txt perm.txt
+```
+
+### Copy a file
+
+```bash
+cp permissions.txt /home/analyst/logs
+```
+
+Unlike `mv`, the original file remains in place.
+
+---
+
+## Nano Text Editor
+
+Open or create a file:
+
+```bash
+nano tasks.txt
+```
+
+Useful shortcuts:
+
+| Shortcut | Action |
+|---|---|
+| `Ctrl + O` | Save |
+| `Ctrl + X` | Exit |
+
+In the web lab, save and exit with:
 
 ```text
-/home/analyst
-├── logs
-├── notes
-│   └── tasks.txt
-└── reports
-    ├── Q1patches.txt
-    ├── Q2patches.txt
-    └── Q3patches.txt
+Ctrl + X
+Y
+Enter
+```
+
+---
+
+## Output Redirection
+
+Overwrite a file:
+
+```bash
+echo "time" > permissions.txt
+```
+
+Append to a file:
+
+```bash
+echo "last updated date" >> permissions.txt
+```
+
+- `>` replaces existing contents.
+- `>>` adds content to the end.
+- Both can create a file if it does not already exist.
+
+---
+
+# Lab Scenario
+
+Initial structure:
+
+```text
+home
+└── analyst
+    ├── notes
+    │   ├── Q3patches.txt
+    │   └── tempnotes.txt
+    ├── reports
+    │   ├── Q1patches.txt
+    │   └── Q2patches.txt
+    └── temp
+```
+
+Target structure:
+
+```text
+home
+└── analyst
+    ├── logs
+    ├── notes
+    │   └── tasks.txt
+    └── reports
+        ├── Q1patches.txt
+        ├── Q2patches.txt
+        └── Q3patches.txt
 ```
 
 ---
 
 ## Task 1 — Create `logs`
 
+From `/home/analyst`:
+
 ```bash
-cd /home/analyst
 mkdir logs
 ls
 ```
@@ -109,21 +187,19 @@ logs notes reports
 
 ```bash
 cd /home/analyst/notes
-mv Q3patches.txt /home/analyst/reports
+mv Q3patches.txt /home/analyst/reports/
 ls /home/analyst/reports
 ```
 
 Expected:
 
 ```text
-Q1patches.txt
-Q2patches.txt
-Q3patches.txt
+Q1patches.txt Q2patches.txt Q3patches.txt
 ```
 
 ---
 
-## Task 4 — Delete `tempnotes.txt`
+## Task 4 — Remove `tempnotes.txt`
 
 ```bash
 rm tempnotes.txt
@@ -151,7 +227,7 @@ tasks.txt
 
 ## Task 6 — Edit `tasks.txt`
 
-Open:
+Open the file:
 
 ```bash
 nano tasks.txt
@@ -164,16 +240,23 @@ Completed tasks
 1. Managed file structure in /home/analyst
 ```
 
-In the web lab:
+Save and exit:
 
-1. Press `Ctrl + X`
-2. Press `Y`
-3. Press `Enter`
+```text
+Ctrl + X
+Y
+Enter
+```
 
-Then verify:
+Clear the terminal:
 
 ```bash
 clear
+```
+
+Verify:
+
+```bash
 cat tasks.txt
 ```
 
@@ -197,8 +280,9 @@ ls
 rmdir temp
 ls
 
-cd notes
-mv Q3patches.txt /home/analyst/reports
+cd /home/analyst/notes
+
+mv Q3patches.txt /home/analyst/reports/
 ls /home/analyst/reports
 
 rm tempnotes.txt
@@ -215,48 +299,42 @@ cat tasks.txt
 
 ---
 
-## Output Redirection
+## Command Summary
 
-Append text:
-
-```bash
-echo "last updated date" >> permissions.txt
-```
-
-Overwrite the file:
-
-```bash
-echo "time" > permissions.txt
-```
-
-Difference:
-
-```text
->   = overwrite
->>  = append
-```
-
-Use `>` carefully because previous file contents are replaced.
+| Command | Purpose |
+|---|---|
+| `mkdir` | Create directory |
+| `rmdir` | Remove empty directory |
+| `touch` | Create empty file |
+| `rm` | Remove file |
+| `mv` | Move or rename |
+| `cp` | Copy |
+| `nano` | Edit a text file |
+| `>` | Overwrite file with output |
+| `>>` | Append output to file |
+| `ls` | Verify files/directories |
+| `cat` | Display file contents |
+| `clear` | Clear terminal |
 
 ---
 
 ## Security Relevance
 
-These commands help security analysts:
+These skills help security analysts:
 
 - Organize logs and reports
-- Manage investigation files
-- Move security evidence
-- Delete obsolete files
-- Create documentation
-- Edit configuration or notes
-- Maintain organized directory structures
+- Remove obsolete files
+- Move reports to correct locations
+- Maintain clean directory structures
+- Document completed work
+- Edit notes and configuration files
+- Manage security-related data from the command line
 
 ---
 
 ## Core Takeaway
 
-The main Linux file-management commands are:
+The essential Linux file-management commands are:
 
 ```bash
 mkdir
@@ -268,9 +346,4 @@ cp
 nano
 ```
 
-And for writing command output to files:
-
-```bash
->
->>
-```
+Together, they allow you to create, organize, move, remove, copy, and edit files and directories efficiently.
