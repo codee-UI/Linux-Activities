@@ -2,50 +2,91 @@
 
 ## Objective
 Learn how to filter information in Linux using:
-
-- `grep` — search file contents for matching text
+- `grep` — search file contents for specific text
 - `|` — pipe output from one command into another
 - `find` — locate files and directories using search criteria
 
-## `grep` — Search Inside Files
+These commands help security analysts quickly locate logs, users, suspicious files, and relevant text.
+
+## 1. `grep` — Search Inside Files
 
 Syntax:
 
 ```bash
-grep SEARCH_TERM FILE
+grep SEARCH_TEXT FILE
 ```
 
 Examples:
 
 ```bash
 grep OS updates.txt
-grep error time_logs.txt
+grep error server_logs.txt
 ```
 
-Useful for finding errors, usernames, IP addresses, or suspicious events in logs.
+### Lab task
 
-## Piping with `|`
+```bash
+cd /home/analyst/logs
+grep error server_logs.txt
+```
 
-A pipe sends the output of one command into another.
+**Result:** `server_logs.txt` contains **6 error entries**.
+
+## 2. Piping with `|`
+
+A pipe sends the output of one command to another command.
+
+```bash
+command1 | command2
+```
 
 Example:
 
 ```bash
-ls /home/analyst/reports | grep users
+ls | grep Q1
 ```
 
-General pattern:
+This lists files and then keeps only filenames containing `Q1`.
+
+### Lab results
 
 ```bash
-COMMAND1 | COMMAND2
+cd /home/analyst/reports/users
+ls | grep Q1
 ```
 
-## `find` — Search for Files and Directories
+**Result:** **3 files** contain `Q1`.
+
+```bash
+ls | grep access
+```
+
+**Result:** **4 files** contain `access`.
+
+## 3. Search File Contents with `grep`
+
+Find a specific username:
+
+```bash
+grep jhill Q2_deleted_users.txt
+```
+
+**Result:** `jhill` is present.
+
+Find users in Human Resources:
+
+```bash
+grep "Human Resources" Q4_added_users.txt
+```
+
+Quotation marks are useful when the search phrase contains spaces.
+
+## 4. `find` — Locate Files and Directories
 
 Basic syntax:
 
 ```bash
-find STARTING_DIRECTORY CRITERIA
+find LOCATION CRITERIA
 ```
 
 Example:
@@ -54,89 +95,59 @@ Example:
 find /home/analyst/projects
 ```
 
-### `-name`
+### Find by filename
 
-Case-sensitive filename search:
+Case-sensitive:
 
 ```bash
 find /home/analyst/projects -name "*log*"
 ```
 
-### `-iname`
-
-Case-insensitive filename search:
+Case-insensitive:
 
 ```bash
 find /home/analyst/projects -iname "*log*"
 ```
 
-### Wildcard `*`
+The wildcard `*` represents zero or more unknown characters.
 
-Represents zero or more unknown characters.
+## 5. Search by Modification Time
 
-Example:
-
-```text
-*log*
-```
-
-### `-mtime`
-
-Search by modification time in days:
+Modified within the last 3 days:
 
 ```bash
 find /home/analyst/projects -mtime -3
+```
+
+Modified more than 1 day ago:
+
+```bash
 find /home/analyst/projects -mtime +1
+```
+
+Modified less than 1 day ago:
+
+```bash
 find /home/analyst/projects -mtime -1
 ```
 
-### `-mmin`
-
-Search by modification time in minutes:
+For minute-based searches, use:
 
 ```bash
-find /home/analyst/projects -mmin -30
+-mmin
 ```
-
-# Lab: Filter with `grep`
-
-## Task 1 — Find Error Messages
-
-```bash
-cd /home/analyst/logs
-grep error server_logs.txt
-```
-
-Goal: count how many lines contain `error`.
-
-## Task 2 — Find Filenames Containing Text
-
-```bash
-cd /home/analyst/reports/users
-ls | grep Q1
-```
-
-Goal: count filenames containing `Q1`.
-
-Then:
-
-```bash
-ls | grep access
-```
-
-Goal: count filenames containing `access`.
 
 ## Command Summary
 
 | Command | Purpose | Example |
 |---|---|---|
-| `grep` | Search text inside a file | `grep error server_logs.txt` |
+| `grep` | Search inside files | `grep error server_logs.txt` |
 | `|` | Send output to another command | `ls | grep Q1` |
-| `find` | Search files/directories | `find /home/analyst/projects` |
-| `find -name` | Case-sensitive name search | `find . -name "*log*"` |
-| `find -iname` | Case-insensitive name search | `find . -iname "*log*"` |
-| `find -mtime` | Search by modified days | `find . -mtime -3` |
-| `find -mmin` | Search by modified minutes | `find . -mmin -30` |
+| `find` | Search files/directories | `find /home/analyst/projects -name "*log*"` |
+| `-name` | Case-sensitive name search | `find . -name "*log*"` |
+| `-iname` | Case-insensitive name search | `find . -iname "*log*"` |
+| `-mtime` | Search by modification time in days | `find . -mtime -3` |
+| `-mmin` | Search by modification time in minutes | `find . -mmin -30` |
 
 ## Complete Lab Workflow
 
@@ -147,33 +158,52 @@ grep error server_logs.txt
 cd /home/analyst/reports/users
 ls | grep Q1
 ls | grep access
+
+ls
+grep jhill Q2_deleted_users.txt
+grep "Human Resources" Q4_added_users.txt
 ```
 
-## Key Concepts
+## Lab Answers
 
-- **Filtering:** selecting data that matches a condition
-- **Standard output:** information returned by the shell
-- **Standard input:** information received by a command
-- **Pipe:** connects one command's output to another command's input
-- **Search criteria:** conditions used by `find`
+| Question | Answer |
+|---|---|
+| Error lines in `server_logs.txt` | **6** |
+| Files containing `Q1` | **3** |
+| Files containing `access` | **4** |
+| Is `jhill` in `Q2_deleted_users.txt`? | **Yes** |
+| Find HR users | `grep "Human Resources" Q4_added_users.txt` |
 
 ## Security Relevance
 
-These tools help security analysts:
-
-- Search large logs
-- Locate suspicious events
-- Find files with specific names
-- Identify recently modified files
-- Filter user/access reports
-- Investigate malware or unauthorized changes
+These commands are useful for:
+- Searching logs
+- Finding error messages
+- Locating users or events
+- Finding suspicious filenames
+- Searching recently modified files
+- Reducing large outputs to relevant information
 
 ## Core Takeaway
 
+Use:
+
 ```bash
 grep
+```
+
+to search **inside files**,
+
+```bash
 |
+```
+
+to pass output between commands,
+
+and:
+
+```bash
 find
 ```
 
-Use `grep` to search text, pipes to connect commands, and `find` to locate files or directories based on names, modification times, and other criteria.
+to locate **files and directories** based on specific criteria.
